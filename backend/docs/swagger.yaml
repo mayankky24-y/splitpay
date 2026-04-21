@@ -1,0 +1,987 @@
+basePath: /api/v1
+definitions:
+  dtos.AcceptFriendRequest:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  dtos.AcceptFriendResponse:
+    properties:
+      friend_wallet_address:
+        type: string
+      id:
+        type: string
+      nickname:
+        type: string
+      user_wallet_address:
+        type: string
+    type: object
+  dtos.AddFriendRequest:
+    properties:
+      friend_wallet_address:
+        type: string
+      user_wallet_address:
+        type: string
+    required:
+    - friend_wallet_address
+    - user_wallet_address
+    type: object
+  dtos.AddFriendResponse:
+    properties:
+      friend_wallet_address:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      user_wallet_address:
+        type: string
+    required:
+    - friend_wallet_address
+    - user_wallet_address
+    type: object
+  dtos.AssignParticipantsRequest:
+    properties:
+      itemId:
+        type: string
+      participants:
+        items:
+          type: string
+        type: array
+    type: object
+  dtos.AssignedParticipant:
+    properties:
+      amountOwed:
+        type: number
+      isPaid:
+        type: boolean
+      itemId:
+        type: string
+      participantId:
+        type: string
+    type: object
+  dtos.AssignedParticipantResponse:
+    properties:
+      itemId:
+        type: string
+      itemName:
+        type: string
+      participants:
+        items:
+          $ref: '#/definitions/dtos.AssignedParticipant'
+        type: array
+    type: object
+  dtos.CreateBillWithoutParticipantItemRequest:
+    properties:
+      name:
+        example: Steak
+        type: string
+      price:
+        example: 10.99
+        type: number
+      quantity:
+        example: 2
+        type: integer
+    type: object
+  dtos.CreateBillWithoutParticipantItemResponse:
+    properties:
+      itemId:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  dtos.CreateBillWithoutParticipantRequest:
+    properties:
+      billDate:
+        example: "2019-11-02"
+        type: string
+      creatorId:
+        example: user123
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.CreateBillWithoutParticipantItemRequest'
+        type: array
+      service:
+        example: 0
+        type: number
+      storeName:
+        example: East Repair Inc.
+        type: string
+      tax:
+        example: 9.06
+        type: number
+    type: object
+  dtos.CreateBillWithoutParticipantResponse:
+    properties:
+      billDate:
+        type: string
+      billId:
+        type: string
+      createdAt:
+        type: string
+      creatorId:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.CreateBillWithoutParticipantItemResponse'
+        type: array
+      storeName:
+        type: string
+      tax:
+        type: number
+    type: object
+  dtos.DeclineFriendRequest:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  dtos.DeclineFriendResponse:
+    properties:
+      friend_wallet_address:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      user_wallet_address:
+        type: string
+    required:
+    - friend_wallet_address
+    - user_wallet_address
+    type: object
+  dtos.FriendNicknameRequest:
+    properties:
+      friend_wallet_address:
+        type: string
+      nickname:
+        type: string
+      user_wallet_address:
+        type: string
+    required:
+    - friend_wallet_address
+    - nickname
+    - user_wallet_address
+    type: object
+  dtos.FriendResponse:
+    properties:
+      friend_wallet_address:
+        type: string
+      id:
+        type: string
+      nickname:
+        type: string
+    type: object
+  dtos.GetBillByCreatorItemResponse:
+    properties:
+      itemId:
+        type: string
+      name:
+        type: string
+      participants:
+        items:
+          $ref: '#/definitions/dtos.GetBillByCreatorParticipantResponse'
+        type: array
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  dtos.GetBillByCreatorParticipantResponse:
+    properties:
+      amountOwed:
+        type: number
+      isPaid:
+        type: string
+      participantId:
+        type: string
+    type: object
+  dtos.GetBillByCreatorResponse:
+    properties:
+      billDate:
+        type: string
+      billId:
+        type: string
+      createdAt:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.GetBillByCreatorItemResponse'
+        type: array
+      participants:
+        items:
+          $ref: '#/definitions/dtos.GetBillByCreatorParticipantResponse'
+        type: array
+      storeName:
+        type: string
+      tax:
+        type: number
+    type: object
+  dtos.ParticipantBillResponse:
+    properties:
+      billDate:
+        type: string
+      billId:
+        type: string
+      createdAt:
+        type: string
+      creatorId:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.ParticipantItemResponse'
+        type: array
+      participants:
+        items:
+          $ref: '#/definitions/dtos.ParticipantListResponse'
+        type: array
+      storeName:
+        type: string
+      tax:
+        type: number
+    type: object
+  dtos.ParticipantItemResponse:
+    properties:
+      itemId:
+        type: string
+      name:
+        type: string
+      participants:
+        items:
+          $ref: '#/definitions/dtos.ParticipantListResponse'
+        type: array
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  dtos.ParticipantListResponse:
+    properties:
+      amountOwed:
+        type: number
+      isPaid:
+        type: string
+      participantId:
+        type: string
+    type: object
+  dtos.PendingFriendResponse:
+    properties:
+      friend_wallet_address:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      user_wallet_address:
+        type: string
+    type: object
+  dtos.ReceiptItem:
+    properties:
+      name:
+        example: Front and rear brake cables
+        type: string
+      price:
+        example: 100.99
+        type: number
+      quantity:
+        example: 1
+        type: integer
+    type: object
+  dtos.ReceiptResponse:
+    properties:
+      billDate:
+        example: "2025-10-02"
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.ReceiptItem'
+        type: array
+      service:
+        type: number
+      storeName:
+        example: Nigger Store
+        type: string
+      tax:
+        example: 9.1
+        type: number
+    type: object
+  dtos.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  dtos.UpdateBillItemRequest:
+    properties:
+      itemId:
+        example: item-001
+        type: string
+      name:
+        example: Nasi Goreng
+        type: string
+      participants:
+        items:
+          $ref: '#/definitions/dtos.UpdateBillParticipantRequest'
+        type: array
+      price:
+        example: 100.69
+        type: number
+      quantity:
+        example: 2
+        type: integer
+    type: object
+  dtos.UpdateBillItemResponse:
+    properties:
+      itemId:
+        type: string
+      name:
+        type: string
+      participants:
+        items:
+          $ref: '#/definitions/dtos.UpdateBillParticipantResponse'
+        type: array
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  dtos.UpdateBillParticipantRequest:
+    properties:
+      isPaid:
+        example: ""
+        type: string
+      participantId:
+        example: u123
+        type: string
+    type: object
+  dtos.UpdateBillParticipantResponse:
+    properties:
+      amountOwed:
+        type: number
+      isPaid:
+        type: string
+      participantId:
+        type: string
+    type: object
+  dtos.UpdateBillRequest:
+    properties:
+      billDate:
+        example: "2025-07-30T00:00:00Z"
+        type: string
+      billId:
+        example: bill-001
+        type: string
+      createdAt:
+        example: "2025-07-31T15:04:05Z"
+        type: string
+      creatorId:
+        example: user-123
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.UpdateBillItemRequest'
+        type: array
+      storeName:
+        example: Warung Makan Bu Tini
+        type: string
+      tax:
+        example: 10
+        type: number
+    type: object
+  dtos.UpdateBillResponse:
+    properties:
+      billDate:
+        type: string
+      billId:
+        type: string
+      createdAt:
+        type: string
+      creatorId:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.UpdateBillItemResponse'
+        type: array
+      storeName:
+        type: string
+      tax:
+        type: number
+    type: object
+  models.User:
+    properties:
+      wallet_address:
+        type: string
+    type: object
+info:
+  contact:
+    email: Jacksontpa7@gmail.com
+  license:
+    name: MIT
+  version: "1.0"
+paths:
+  /bills/assign-participants:
+    post:
+      consumes:
+      - application/json
+      description: Assign Participant To Item
+      parameters:
+      - description: Participants
+        in: body
+        name: bill
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.AssignParticipantsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.AssignedParticipantResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Assign Participant To Item
+      tags:
+      - Bill
+  /bills/bill-without-participant:
+    post:
+      consumes:
+      - application/json
+      description: Save a bill with items, tax, and service, without splitting between
+        participants
+      parameters:
+      - description: Bill Data without participant
+        in: body
+        name: bill
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateBillWithoutParticipantRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.CreateBillWithoutParticipantResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create bill (no participants)
+      tags:
+      - Bill
+  /bills/by-billId/{billId}:
+    get:
+      description: Get bills by Bill ID
+      parameters:
+      - description: Bill ID
+        in: path
+        name: billId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.ParticipantBillResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get bills by Bill ID
+      tags:
+      - Bill
+  /bills/by-creator:
+    get:
+      consumes:
+      - application/json
+      description: Get all bills created by a specific creator, optionally filter
+        by billId
+      parameters:
+      - description: Creator ID
+        in: query
+        name: creatorId
+        required: true
+        type: string
+      - description: Bill ID (optional filter)
+        in: query
+        name: billId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dtos.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dtos.GetBillByCreatorResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get bills by creator
+      tags:
+      - Bill
+  /bills/by-participant/{participantId}:
+    get:
+      description: Get bills by participant ID
+      parameters:
+      - description: Participant ID
+        in: path
+        name: participantId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.ParticipantBillResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get bills by participant ID
+      tags:
+      - Bill
+  /bills/delete-bill/{billId}:
+    delete:
+      description: Delete bill by Bill ID
+      parameters:
+      - description: Bill ID
+        in: path
+        name: billId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted bill
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete bill by Bill ID
+      tags:
+      - Bill
+  /bills/update-bill:
+    patch:
+      description: Update Bill
+      parameters:
+      - description: Bill Data
+        in: body
+        name: bill
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateBillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.UpdateBillResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update Bill
+      tags:
+      - Bill
+  /check:
+    get:
+      description: Check backend health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Check backend health
+      tags:
+      - Payment
+  /friends/{user_wallet_address}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Wallet Address
+        in: path
+        name: user_wallet_address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.FriendResponse'
+        "400":
+          description: Invalid Request
+        "404":
+          description: User or Friend Not Found
+        "409":
+          description: Relationship Already Exists
+        "500":
+          description: Internal Server Error
+      summary: Fetch friend
+      tags:
+      - Friend
+  /friends/accept:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Friend Info
+        in: body
+        name: friend
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.AcceptFriendRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.AcceptFriendResponse'
+        "400":
+          description: Invalid Request
+        "404":
+          description: User or Friend Not Found
+        "409":
+          description: Relationship Already Exists
+        "500":
+          description: Internal Server Error
+      summary: Accept friend request
+      tags:
+      - Friend
+  /friends/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Friend Info
+        in: body
+        name: friend
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.AddFriendRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.AddFriendResponse'
+        "400":
+          description: Invalid Request
+        "404":
+          description: User or Friend Not Found
+        "409":
+          description: Relationship Already Exists
+        "500":
+          description: Internal Server Error
+      summary: Create friend request
+      tags:
+      - Friend
+  /friends/alias:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Friend Info
+        in: body
+        name: friend
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.FriendNicknameRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.FriendResponse'
+        "400":
+          description: Invalid Request
+        "404":
+          description: User or Friend Not Found
+        "409":
+          description: Relationship Already Exists
+        "500":
+          description: Internal Server Error
+      summary: add friend nickname
+      tags:
+      - Friend
+  /friends/decline:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Friend Info
+        in: body
+        name: friend
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.DeclineFriendRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.DeclineFriendResponse'
+        "400":
+          description: Invalid Request
+        "404":
+          description: User or Friend Not Found
+        "409":
+          description: Relationship Already Exists
+        "500":
+          description: Internal Server Error
+      summary: Decline friend request
+      tags:
+      - Friend
+  /friends/get-pending-request-by-friend/{friend_wallet_address}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: friend wallet addres
+        in: path
+        name: friend_wallet_address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.PendingFriendResponse'
+        "400":
+          description: Invalid Request
+        "500":
+          description: Internal Server Error
+      summary: Get pending & declined friend request by friend wallet address
+      tags:
+      - Friend
+  /friends/get-pending-request/{user_wallet_address}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: user wallet addres
+        in: path
+        name: user_wallet_address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.PendingFriendResponse'
+        "400":
+          description: Invalid Request
+        "500":
+          description: Internal Server Error
+      summary: Get pending & declined friend request by user wallet address
+      tags:
+      - Friend
+  /get-rate:
+    get:
+      consumes:
+      - application/json
+      description: Get HBAR Rate by 1 USD
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success get HBAR rate
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+        "500":
+          description: Failed to fetch HBAR rate
+      summary: Get HBAR Rate (1 USD)
+      tags:
+      - Rate
+  /payments/confirm-payment/{transactionId}:
+    get:
+      description: example return confirms a payment on Hedera
+      parameters:
+      - description: Transaction ID in format '0.0.xxxx@seconds.nanos'
+        in: path
+        name: transactionId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Example confirm a payment
+      tags:
+      - Payment
+  /receipt/:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Accepts a receipt image (PNG/JPEG) and get the detail.
+      parameters:
+      - description: Receipt image file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Structured receipt result.
+          schema:
+            $ref: '#/definitions/dtos.ReceiptResponse'
+        "400":
+          description: Invalid input (missing file, bad form data).
+        "500":
+          description: Internal error (Gemini failure, parse error, etc.).
+      summary: Extract structured receipt data from an uploaded image
+      tags:
+      - receipt
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Save wallet address to database
+      parameters:
+      - description: User info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new user
+      tags:
+      - users
+swagger: "2.0"

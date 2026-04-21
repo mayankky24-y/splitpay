@@ -1,0 +1,1499 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {
+            "email": "Jacksontpa7@gmail.com"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/bills/assign-participants": {
+            "post": {
+                "description": "Assign Participant To Item",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Assign Participant To Item",
+                "parameters": [
+                    {
+                        "description": "Participants",
+                        "name": "bill",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AssignParticipantsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AssignedParticipantResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bills/bill-without-participant": {
+            "post": {
+                "description": "Save a bill with items, tax, and service, without splitting between participants",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Create bill (no participants)",
+                "parameters": [
+                    {
+                        "description": "Bill Data without participant",
+                        "name": "bill",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateBillWithoutParticipantRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateBillWithoutParticipantResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bills/by-billId/{billId}": {
+            "get": {
+                "description": "Get bills by Bill ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Get bills by Bill ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bill ID",
+                        "name": "billId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.ParticipantBillResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bills/by-creator": {
+            "get": {
+                "description": "Get all bills created by a specific creator, optionally filter by billId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Get bills by creator",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Creator ID",
+                        "name": "creatorId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bill ID (optional filter)",
+                        "name": "billId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dtos.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dtos.GetBillByCreatorResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bills/by-participant/{participantId}": {
+            "get": {
+                "description": "Get bills by participant ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Get bills by participant ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Participant ID",
+                        "name": "participantId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.ParticipantBillResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bills/delete-bill/{billId}": {
+            "delete": {
+                "description": "Delete bill by Bill ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Delete bill by Bill ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bill ID",
+                        "name": "billId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted bill",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bills/update-bill": {
+            "patch": {
+                "description": "Update Bill",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bill"
+                ],
+                "summary": "Update Bill",
+                "parameters": [
+                    {
+                        "description": "Bill Data",
+                        "name": "bill",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateBillRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateBillResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/check": {
+            "get": {
+                "description": "Check backend health",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Check backend health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/friends/accept": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "Accept friend request",
+                "parameters": [
+                    {
+                        "description": "Friend Info",
+                        "name": "friend",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AcceptFriendRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AcceptFriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "404": {
+                        "description": "User or Friend Not Found"
+                    },
+                    "409": {
+                        "description": "Relationship Already Exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/friends/add": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "Create friend request",
+                "parameters": [
+                    {
+                        "description": "Friend Info",
+                        "name": "friend",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AddFriendRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.AddFriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "404": {
+                        "description": "User or Friend Not Found"
+                    },
+                    "409": {
+                        "description": "Relationship Already Exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/friends/alias": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "add friend nickname",
+                "parameters": [
+                    {
+                        "description": "Friend Info",
+                        "name": "friend",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FriendNicknameRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "404": {
+                        "description": "User or Friend Not Found"
+                    },
+                    "409": {
+                        "description": "Relationship Already Exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/friends/decline": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "Decline friend request",
+                "parameters": [
+                    {
+                        "description": "Friend Info",
+                        "name": "friend",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.DeclineFriendRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.DeclineFriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "404": {
+                        "description": "User or Friend Not Found"
+                    },
+                    "409": {
+                        "description": "Relationship Already Exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/friends/get-pending-request-by-friend/{friend_wallet_address}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "Get pending \u0026 declined friend request by friend wallet address",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "friend wallet addres",
+                        "name": "friend_wallet_address",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.PendingFriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/friends/get-pending-request/{user_wallet_address}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "Get pending \u0026 declined friend request by user wallet address",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user wallet addres",
+                        "name": "user_wallet_address",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.PendingFriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/friends/{user_wallet_address}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Friend"
+                ],
+                "summary": "Fetch friend",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Wallet Address",
+                        "name": "user_wallet_address",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FriendResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "404": {
+                        "description": "User or Friend Not Found"
+                    },
+                    "409": {
+                        "description": "Relationship Already Exists"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/get-rate": {
+            "get": {
+                "description": "Get HBAR Rate by 1 USD",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rate"
+                ],
+                "summary": "Get HBAR Rate (1 USD)",
+                "responses": {
+                    "200": {
+                        "description": "success get HBAR rate",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "500": {
+                        "description": "Failed to fetch HBAR rate"
+                    }
+                }
+            }
+        },
+        "/payments/confirm-payment/{transactionId}": {
+            "get": {
+                "description": "example return confirms a payment on Hedera",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Example confirm a payment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID in format '0.0.xxxx@seconds.nanos'",
+                        "name": "transactionId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/receipt/": {
+            "post": {
+                "description": "Accepts a receipt image (PNG/JPEG) and get the detail.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "receipt"
+                ],
+                "summary": "Extract structured receipt data from an uploaded image",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Receipt image file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Structured receipt result.",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.ReceiptResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input (missing file, bad form data)."
+                    },
+                    "500": {
+                        "description": "Internal error (Gemini failure, parse error, etc.)."
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "description": "Save wallet address to database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "User info",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dtos.AcceptFriendRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.AcceptFriendResponse": {
+            "type": "object",
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "user_wallet_address": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.AddFriendRequest": {
+            "type": "object",
+            "required": [
+                "friend_wallet_address",
+                "user_wallet_address"
+            ],
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "user_wallet_address": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.AddFriendResponse": {
+            "type": "object",
+            "required": [
+                "friend_wallet_address",
+                "user_wallet_address"
+            ],
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_wallet_address": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.AssignParticipantsRequest": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "dtos.AssignedParticipant": {
+            "type": "object",
+            "properties": {
+                "amountOwed": {
+                    "type": "number"
+                },
+                "isPaid": {
+                    "type": "boolean"
+                },
+                "itemId": {
+                    "type": "string"
+                },
+                "participantId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.AssignedParticipantResponse": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string"
+                },
+                "itemName": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.AssignedParticipant"
+                    }
+                }
+            }
+        },
+        "dtos.CreateBillWithoutParticipantItemRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Steak"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 10.99
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
+        "dtos.CreateBillWithoutParticipantItemResponse": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.CreateBillWithoutParticipantRequest": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string",
+                    "example": "2019-11-02"
+                },
+                "creatorId": {
+                    "type": "string",
+                    "example": "user123"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.CreateBillWithoutParticipantItemRequest"
+                    }
+                },
+                "service": {
+                    "type": "number",
+                    "example": 0
+                },
+                "storeName": {
+                    "type": "string",
+                    "example": "East Repair Inc."
+                },
+                "tax": {
+                    "type": "number",
+                    "example": 9.06
+                }
+            }
+        },
+        "dtos.CreateBillWithoutParticipantResponse": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string"
+                },
+                "billId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "creatorId": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.CreateBillWithoutParticipantItemResponse"
+                    }
+                },
+                "storeName": {
+                    "type": "string"
+                },
+                "tax": {
+                    "type": "number"
+                }
+            }
+        },
+        "dtos.DeclineFriendRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.DeclineFriendResponse": {
+            "type": "object",
+            "required": [
+                "friend_wallet_address",
+                "user_wallet_address"
+            ],
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_wallet_address": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.FriendNicknameRequest": {
+            "type": "object",
+            "required": [
+                "friend_wallet_address",
+                "nickname",
+                "user_wallet_address"
+            ],
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "user_wallet_address": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.FriendResponse": {
+            "type": "object",
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.GetBillByCreatorItemResponse": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.GetBillByCreatorParticipantResponse"
+                    }
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.GetBillByCreatorParticipantResponse": {
+            "type": "object",
+            "properties": {
+                "amountOwed": {
+                    "type": "number"
+                },
+                "isPaid": {
+                    "type": "string"
+                },
+                "participantId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.GetBillByCreatorResponse": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string"
+                },
+                "billId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.GetBillByCreatorItemResponse"
+                    }
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.GetBillByCreatorParticipantResponse"
+                    }
+                },
+                "storeName": {
+                    "type": "string"
+                },
+                "tax": {
+                    "type": "number"
+                }
+            }
+        },
+        "dtos.ParticipantBillResponse": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string"
+                },
+                "billId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "creatorId": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.ParticipantItemResponse"
+                    }
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.ParticipantListResponse"
+                    }
+                },
+                "storeName": {
+                    "type": "string"
+                },
+                "tax": {
+                    "type": "number"
+                }
+            }
+        },
+        "dtos.ParticipantItemResponse": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.ParticipantListResponse"
+                    }
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.ParticipantListResponse": {
+            "type": "object",
+            "properties": {
+                "amountOwed": {
+                    "type": "number"
+                },
+                "isPaid": {
+                    "type": "string"
+                },
+                "participantId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.PendingFriendResponse": {
+            "type": "object",
+            "properties": {
+                "friend_wallet_address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_wallet_address": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.ReceiptItem": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Front and rear brake cables"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 100.99
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "dtos.ReceiptResponse": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string",
+                    "example": "2025-10-02"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.ReceiptItem"
+                    }
+                },
+                "service": {
+                    "type": "number"
+                },
+                "storeName": {
+                    "type": "string",
+                    "example": "Nigger Store"
+                },
+                "tax": {
+                    "type": "number",
+                    "example": 9.1
+                }
+            }
+        },
+        "dtos.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.UpdateBillItemRequest": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string",
+                    "example": "item-001"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Nasi Goreng"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.UpdateBillParticipantRequest"
+                    }
+                },
+                "price": {
+                    "type": "number",
+                    "example": 100.69
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
+        "dtos.UpdateBillItemResponse": {
+            "type": "object",
+            "properties": {
+                "itemId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "participants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.UpdateBillParticipantResponse"
+                    }
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.UpdateBillParticipantRequest": {
+            "type": "object",
+            "properties": {
+                "isPaid": {
+                    "type": "string",
+                    "example": ""
+                },
+                "participantId": {
+                    "type": "string",
+                    "example": "u123"
+                }
+            }
+        },
+        "dtos.UpdateBillParticipantResponse": {
+            "type": "object",
+            "properties": {
+                "amountOwed": {
+                    "type": "number"
+                },
+                "isPaid": {
+                    "type": "string"
+                },
+                "participantId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.UpdateBillRequest": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string",
+                    "example": "2025-07-30T00:00:00Z"
+                },
+                "billId": {
+                    "type": "string",
+                    "example": "bill-001"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2025-07-31T15:04:05Z"
+                },
+                "creatorId": {
+                    "type": "string",
+                    "example": "user-123"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.UpdateBillItemRequest"
+                    }
+                },
+                "storeName": {
+                    "type": "string",
+                    "example": "Warung Makan Bu Tini"
+                },
+                "tax": {
+                    "type": "number",
+                    "example": 10
+                }
+            }
+        },
+        "dtos.UpdateBillResponse": {
+            "type": "object",
+            "properties": {
+                "billDate": {
+                    "type": "string"
+                },
+                "billId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "creatorId": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.UpdateBillItemResponse"
+                    }
+                },
+                "storeName": {
+                    "type": "string"
+                },
+                "tax": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "wallet_address": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

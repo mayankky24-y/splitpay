@@ -1,0 +1,13 @@
+services:
+  split_chain_fe:
+    build: .
+    image: split_chain_fe
+    container_name: 'split_chain_fe'
+    ports:
+      - 3000:3000
+    networks:
+      - caddy_net
+
+networks:
+  caddy_net:
+    external: true
