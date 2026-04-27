@@ -7,9 +7,9 @@ import (
 	"github.com/JZ23-2/splitbill-backend/routes"
 )
 
-//	@Split				Chain
+//	@Split				Pay
 //	@version			1.0
-//	@Split				Chain Backend
+//	@Split				Pay Backend
 //	@contact.Jackson	API Support
 //	@contact.email		Jacksontpa7@gmail.com
 //	@license.name		MIT

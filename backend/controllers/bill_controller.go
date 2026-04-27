@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/JZ23-2/splitbill-backend/dtos"
 	"github.com/JZ23-2/splitbill-backend/services"
@@ -30,6 +31,10 @@ func CreateBillWithoutParticipantController(c *gin.Context) {
 
 	resp, err := services.CreateBillWithoutParticipant(req)
 	if err != nil {
+		if strings.Contains(err.Error(), "required") || strings.Contains(err.Error(), "invalid billDate") {
+			utils.FailedResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
 		utils.FailedResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

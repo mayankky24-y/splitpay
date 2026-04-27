@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/JZ23-2/splitbill-backend/dtos"
 )
@@ -47,16 +48,11 @@ func SendToGemini(file io.Reader) (*dtos.ReceiptResponse, error) {
 
 	apiURL := os.Getenv("GEMINI_API_URL") + "?key=" + os.Getenv("GEMINI_API_KEY")
 
-	res, err := http.Post(apiURL, "application/json", bytes.NewReader(body))
+	res, err := postGeminiWithRetry(apiURL, body)
 	if err != nil {
 		return nil, err
 	}
 	defer res.Body.Close()
-
-	if res.StatusCode != 200 {
-		resBody, _ := io.ReadAll(res.Body)
-		return nil, fmt.Errorf("status %d: %s", res.StatusCode, resBody)
-	}
 
 	var geminiRes dtos.GeminiResponse
 	if err := json.NewDecoder(res.Body).Decode(&geminiRes); err != nil {
@@ -83,4 +79,50 @@ func SendToGemini(file io.Reader) (*dtos.ReceiptResponse, error) {
 	}
 
 	return &receipt, nil
+}
+
+func postGeminiWithRetry(apiURL string, body []byte) (*http.Response, error) {
+	client := &http.Client{Timeout: 25 * time.Second}
+	retryDelays := []time.Duration{0, 1500 * time.Millisecond}
+	var lastErr error
+
+	for attempt, delay := range retryDelays {
+		if delay > 0 {
+			time.Sleep(delay)
+		}
+
+		req, err := http.NewRequest(http.MethodPost, apiURL, bytes.NewReader(body))
+		if err != nil {
+			return nil, err
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		res, err := client.Do(req)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+
+		if res.StatusCode == http.StatusOK {
+			return res, nil
+		}
+
+		resBody, _ := io.ReadAll(res.Body)
+		res.Body.Close()
+		lastErr = fmt.Errorf("status %d: %s", res.StatusCode, resBody)
+
+		// Retry only transient upstream failures.
+		if res.StatusCode != http.StatusTooManyRequests &&
+			res.StatusCode != http.StatusServiceUnavailable &&
+			res.StatusCode != http.StatusInternalServerError {
+			break
+		}
+
+		// Last attempt already used; stop retrying.
+		if attempt == len(retryDelays)-1 {
+			break
+		}
+	}
+
+	return nil, lastErr
 }

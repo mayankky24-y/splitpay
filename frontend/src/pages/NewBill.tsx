@@ -11,6 +11,7 @@ import { ReceiptService } from "../services/receiptService";
 import BillDetails from "../components/BillDetails";
 import { BillService } from "../services/billService";
 import type { Receipt } from "../models/receipt";
+import { useWallet } from "../contexts/WalletContext";
 
 const NewBill = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -19,6 +20,7 @@ const NewBill = () => {
   const [processing, setProcessing] = useState(false);
   const [useWebcam, setUseWebcam] = useState(false);
   const [result, setResult] = useState<Receipt | null>(null);
+  const { isLoggedIn } = useWallet();
 
   useEffect(() => {
     result && console.log("Result updated:", result);
@@ -70,6 +72,12 @@ const NewBill = () => {
 
   const handleCreateBill = async () => {
     if (!result) return;
+    if (!isLoggedIn) {
+      alert(
+        "Demo mode: connect wallet to save bills and settle payments. You can still test OCR and split previews."
+      );
+      return;
+    }
     try {
       await BillService.createBill(result);
     } finally {
@@ -118,6 +126,19 @@ const NewBill = () => {
       </div>
 
       <div className="max-w-2xl mx-auto">
+        {!isLoggedIn && (
+          <div className="flex items-start gap-3 bg-blue-500/10 border border-blue-400/30 rounded-xl p-4 mb-6">
+            <AlertTriangle className="w-5 h-5 text-blue-300 mt-0.5" />
+            <div>
+              <p className="text-blue-200 font-semibold">Demo Mode</p>
+              <p className="text-blue-100/90 text-sm">
+                OCR and split previews work without wallet. Connect wallet to
+                save bills and process settlements.
+              </p>
+            </div>
+          </div>
+        )}
+
         {uploadedFile &&
           result &&
           Array.isArray(result.items) &&

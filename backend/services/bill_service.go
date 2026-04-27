@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"strings"
 	"time"
 
 	"github.com/JZ23-2/splitbill-backend/database"
@@ -15,8 +16,14 @@ import (
 )
 
 func CreateBillWithoutParticipant(req dtos.CreateBillWithoutParticipantRequest) (*dtos.CreateBillWithoutParticipantResponse, error) {
+	if strings.TrimSpace(req.StoreName) == "" {
+		return nil, errors.New("storeName is required")
+	}
+	if strings.TrimSpace(req.BillDate) == "" {
+		return nil, errors.New("billDate is required")
+	}
 
-	parsedDate, err := time.Parse("2006-01-02", req.BillDate)
+	parsedDate, err := parseBillDate(req.BillDate)
 	if err != nil {
 		return nil, fmt.Errorf("invalid billDate: %w", err)
 	}
@@ -70,6 +77,21 @@ func CreateBillWithoutParticipant(req dtos.CreateBillWithoutParticipantRequest) 
 	}
 
 	return resp, nil
+}
+
+func parseBillDate(input string) (time.Time, error) {
+	raw := strings.TrimSpace(input)
+	layouts := []string{
+		"2006-01-02",
+		time.RFC3339,
+		time.RFC3339Nano,
+	}
+	for _, layout := range layouts {
+		if parsed, err := time.Parse(layout, raw); err == nil {
+			return parsed, nil
+		}
+	}
+	return time.Time{}, fmt.Errorf("unsupported date format: %s", input)
 }
 
 func GetBillsByCreator(creatorID string, billID string) ([]dtos.GetBillByCreatorResponse, error) {

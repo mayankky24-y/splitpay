@@ -23,10 +23,14 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
   const [receiptItems, setReceiptItems] = useState<ReceiptItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [isBulkMode, setIsBulkMode] = useState(false);
   const [showFriendSelector, setShowFriendSelector] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isClosing, setIsClosing] = useState(false);
   const { accountId } = useWallet();
+  const allItemsSelected =
+    receipt.items.length > 0 && selectedItems.length === receipt.items.length;
 
   const currentUserFriend: Friend = {
     ID: "current_user",
@@ -112,6 +116,28 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
     });
   };
 
+  const assignFriendToItems = (itemIndexes: number[], friend: Friend) => {
+    setReceiptItems((prev) => {
+      const newItems = [...prev];
+      for (const itemIndex of itemIndexes) {
+        const item = newItems[itemIndex];
+        if (!item) continue;
+        if (!item.participants) item.participants = [];
+        if (
+          !item.participants.some(
+            (p) => p.participantId === friend.friend_wallet_address
+          )
+        ) {
+          item.participants.push({
+            participantId: friend.friend_wallet_address,
+            isPaid: "",
+          });
+        }
+      }
+      return newItems;
+    });
+  };
+
   const removeFriendFromItem = (
     itemIndex: number,
     friendWalletAddress: string
@@ -128,6 +154,32 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
 
       return newItems;
     });
+  };
+
+  const removeFriendFromItems = (
+    itemIndexes: number[],
+    friendWalletAddress: string
+  ) => {
+    setReceiptItems((prev) => {
+      const newItems = [...prev];
+      for (const itemIndex of itemIndexes) {
+        const item = newItems[itemIndex];
+        if (!item) continue;
+        if (!item.participants) item.participants = [];
+        item.participants = item.participants.filter(
+          (participant) => participant.participantId !== friendWalletAddress
+        );
+      }
+      return newItems;
+    });
+  };
+
+  const toggleItemSelection = (itemIndex: number) => {
+    setSelectedItems((prev) =>
+      prev.includes(itemIndex)
+        ? prev.filter((index) => index !== itemIndex)
+        : [...prev, itemIndex]
+    );
   };
 
   const calculateFriendTotal = (friendWalletAddress: string) => {
@@ -177,6 +229,7 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
     setTimeout(() => {
       setShowFriendSelector(false);
       setSelectedItem(null);
+      setIsBulkMode(false);
       setSearchQuery("");
       setIsClosing(false);
     }, 300);
@@ -234,20 +287,61 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
 
         <div className="p-6">
           <div className="space-y-4 mb-8">
-            <h4 className="text-lg font-semibold text-white mb-4">
-              Assign Items
-            </h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-lg font-semibold text-white">Assign Items</h4>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    if (allItemsSelected) {
+                      setSelectedItems([]);
+                    } else {
+                      setSelectedItems(receipt.items.map((_, idx) => idx));
+                    }
+                  }}
+                  className="text-xs text-purple-200 hover:text-white transition-colors cursor-pointer"
+                >
+                  {allItemsSelected ? "Unselect all" : "Select all"}
+                </button>
+                {selectedItems.length > 0 && (
+                  <button
+                    onClick={() => setSelectedItems([])}
+                    className="text-xs text-purple-200 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Clear selection
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    if (selectedItems.length === 0) return;
+                    setIsBulkMode(true);
+                    setShowFriendSelector(true);
+                  }}
+                  disabled={selectedItems.length === 0}
+                  className="px-3 py-2 rounded-lg text-sm bg-purple-600/30 hover:bg-purple-600/40 text-white border border-purple-400/40 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  Bulk assign ({selectedItems.length})
+                </button>
+              </div>
+            </div>
             {receipt.items.map((item, itemIndex) => {
               const itemWithParticipants = receiptItems[itemIndex];
               const assignedParticipants =
                 itemWithParticipants?.participants || [];
+              const isSelected = selectedItems.includes(itemIndex);
 
               return (
                 <div
                   key={itemIndex}
                   className="bg-white/5 rounded-xl p-4 border border-white/5"
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start justify-between mb-3 gap-3">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleItemSelection(itemIndex)}
+                      className="mt-1 size-4 cursor-pointer accent-fuchsia-500"
+                      title="Select item for bulk assignment"
+                    />
                     <div className="flex-1">
                       <h5 className="text-white font-semibold text-lg">
                         {item.name}
@@ -260,6 +354,7 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
                     </div>
                     <button
                       onClick={() => {
+                        setIsBulkMode(false);
                         setSelectedItem(itemIndex);
                         setShowFriendSelector(true);
                       }}
@@ -501,7 +596,7 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
               <div className="bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 px-8 py-5 border-b border-white/10">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xl font-semibold text-white">
-                    Select Participants
+                    {isBulkMode ? "Select Participants (Bulk)" : "Select Participants"}
                   </h4>
                   <button
                     onClick={closeModal}
@@ -529,12 +624,19 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {filteredFriends.length > 0 ? (
                       filteredFriends.map((friend, index) => {
-                        const isAssigned =
-                          selectedItem !== null &&
-                          receiptItems[selectedItem]?.participants?.some(
-                            (p) =>
-                              p.participantId === friend.friend_wallet_address
-                          );
+                        const isAssigned = isBulkMode
+                          ? selectedItems.length > 0 &&
+                            selectedItems.every((itemIndex) =>
+                              receiptItems[itemIndex]?.participants?.some(
+                                (p) =>
+                                  p.participantId === friend.friend_wallet_address
+                              )
+                            )
+                          : selectedItem !== null &&
+                            receiptItems[selectedItem]?.participants?.some(
+                              (p) =>
+                                p.participantId === friend.friend_wallet_address
+                            );
 
                         const isCurrentUser = friend.ID === "current_user";
 
@@ -542,13 +644,24 @@ const Bill: React.FC<BillProps> = ({ receipt, onSave }) => {
                           <button
                             key={friend.friend_wallet_address}
                             onClick={() => {
-                              if (isAssigned) {
-                                removeFriendFromItem(
-                                  selectedItem,
-                                  friend.friend_wallet_address
-                                );
+                              if (isBulkMode) {
+                                if (isAssigned) {
+                                  removeFriendFromItems(
+                                    selectedItems,
+                                    friend.friend_wallet_address
+                                  );
+                                } else {
+                                  assignFriendToItems(selectedItems, friend);
+                                }
                               } else {
-                                assignFriendToItem(selectedItem, friend);
+                                if (isAssigned) {
+                                  removeFriendFromItem(
+                                    selectedItem!,
+                                    friend.friend_wallet_address
+                                  );
+                                } else {
+                                  assignFriendToItem(selectedItem!, friend);
+                                }
                               }
                             }}
                             className={`relative flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200 cursor-pointer ${

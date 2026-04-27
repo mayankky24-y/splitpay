@@ -107,7 +107,7 @@ const BillDetails: React.FC<BillDetailsProps> = ({
 
   const startEditingStoreName = () => {
     setEditingStoreName(true);
-    setTempStoreName(receipt.storeName);
+    setTempStoreName(receipt.storeName ?? "");
   };
 
   const saveStoreNameEdit = () => {
@@ -125,15 +125,18 @@ const BillDetails: React.FC<BillDetailsProps> = ({
 
   const startEditingBillDate = () => {
     setEditingBillDate(true);
-    const date = new Date(receipt.billDate);
-    setTempBillDate(date.toISOString().split("T")[0]);
+    if (receipt.billDate && !Number.isNaN(Date.parse(receipt.billDate))) {
+      setTempBillDate(receipt.billDate.split("T")[0]);
+      return;
+    }
+    setTempBillDate("");
   };
 
   const saveBillDateEdit = () => {
     if (tempBillDate) {
       const newDate = new Date(tempBillDate);
       if (!isNaN(newDate.getTime())) {
-        onChange?.({ ...receipt, billDate: newDate.toISOString() });
+        onChange?.({ ...receipt, billDate: tempBillDate });
       }
     }
     setEditingBillDate(false);
@@ -146,6 +149,24 @@ const BillDetails: React.FC<BillDetailsProps> = ({
   };
 
   const handleSave = () => {
+    if (!createBill) {
+      alert("Connect wallet to save this bill.");
+      return;
+    }
+    const trimmedStoreName = receipt.storeName?.trim() ?? "";
+    const hasValidBillDate =
+      !!receipt.billDate && !Number.isNaN(Date.parse(receipt.billDate));
+
+    if (!trimmedStoreName) {
+      alert("Store name is required. Please enter a bill name/store name.");
+      return;
+    }
+
+    if (!hasValidBillDate) {
+      alert("Bill date is required. Please select a valid bill date.");
+      return;
+    }
+
     createBill?.(receipt)
       .then(() => {
         navigate("/created-bills");
@@ -158,6 +179,16 @@ const BillDetails: React.FC<BillDetailsProps> = ({
 
   const subtotal = receipt.items.reduce((sum, item) => sum + item.price, 0);
   const grandTotal = subtotal + receipt.tax;
+  const hasStoreName = !!receipt.storeName?.trim();
+  const hasBillDate =
+    !!receipt.billDate && !Number.isNaN(Date.parse(receipt.billDate));
+  const formattedBillDate = hasBillDate
+    ? new Date(receipt.billDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "Set bill date";
 
   return (
     <div className="max-w-2xl w-full mx-auto px-4 sm:px-0 -mt-4">
@@ -195,11 +226,18 @@ const BillDetails: React.FC<BillDetailsProps> = ({
                 onClick={startEditingStoreName}
                 className="text-lg sm:text-xl font-bold text-white hover:text-purple-200 transition-colors cursor-pointer group flex items-center gap-2 flex-1 text-left"
               >
-                <span className="truncate">{receipt.storeName}</span>
+                <span className="truncate">
+                  {hasStoreName ? receipt.storeName : "Set store name"}
+                </span>
                 <Edit3 className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity flex-shrink-0" />
               </button>
             )}
           </div>
+          {!hasStoreName && (
+            <p className="ml-0 sm:ml-[3.35rem] mt-2 text-xs text-red-300">
+              Store name is required.
+            </p>
+          )}
 
           <div className="ml-0 sm:ml-[3.35rem] mt-3 sm:mt-2">
             {editingBillDate ? (
@@ -229,15 +267,16 @@ const BillDetails: React.FC<BillDetailsProps> = ({
                 onClick={startEditingBillDate}
                 className="text-purple-200 text-sm hover:text-purple-100 transition-colors cursor-pointer group flex items-center gap-1"
               >
-                {new Date(receipt.billDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {formattedBillDate}
                 <Edit3 className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
               </button>
             )}
           </div>
+          {!hasBillDate && (
+            <p className="ml-0 sm:ml-[3.35rem] mt-1 text-xs text-red-300">
+              Bill date is required.
+            </p>
+          )}
         </div>
 
         <div className="p-4 sm:p-6">

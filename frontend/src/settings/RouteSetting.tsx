@@ -21,6 +21,11 @@ export const RouteSetting: IRoute[] = [
     element: <NewBill />,
   },
   {
+    name: "Demo",
+    path: "/demo",
+    element: <NewBill />,
+  },
+  {
     name: "Friends",
     path: "/friends",
     element: <Friends />,

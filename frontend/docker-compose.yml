@@ -1,8 +1,8 @@
 services:
-  split_chain_fe:
+  splitpay_fe:
     build: .
-    image: split_chain_fe
-    container_name: 'split_chain_fe'
+    image: splitpay_fe
+    container_name: 'splitpay_fe'
     ports:
       - 3000:3000
     networks:

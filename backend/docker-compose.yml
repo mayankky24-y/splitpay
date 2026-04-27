@@ -1,8 +1,8 @@
 services:
-  split_chain_be:
+  splitpay_be:
     build: .
     image: split-be
-    container_name: split_chain_be
+    container_name: splitpay_be
     ports:
       - 8080:8080
     networks:

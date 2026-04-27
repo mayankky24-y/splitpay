@@ -1,12 +1,17 @@
 import {
   Zap,
   ArrowRight,
-  Upload,
+  Clock3,
+  Layers,
+  BrainCircuit,
+  ReceiptText,
+  Plane,
+  Home,
+  CalendarDays,
+  Gauge,
+  Network,
+  BadgeCheck,
   Sparkles,
-  Shield,
-  Globe,
-  Users,
-  Receipt,
   Wallet,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -68,7 +73,7 @@ export default function Landing() {
               <img
                 className="w-6 h-6 sm:w-8 sm:h-8 text-fuchsia-400 animate-spin"
                 style={{ animationDuration: "3s" }}
-                src="https://rcxelnfhvbqszzccltry.supabase.co/storage/v1/object/sign/logo/SplitChain.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81MDYxNWEyMi0yMDRlLTQzYzMtYjgwNy1lYTllZGI1YjgzMTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL1NwbGl0Q2hhaW4ucG5nIiwiaWF0IjoxNzU0MzczNzA1LCJleHAiOjE4MTc0NDU3MDV9.3w7qGG5bAaOJS4b6aTUc_gR3HutrmWRoXIVIDrgoys0"
+                src="/splitpay.png"
                 alt=""
               />
               <div className="absolute inset-0 bg-fuchsia-400 blur-md opacity-50 animate-pulse"></div>
@@ -101,7 +106,7 @@ export default function Landing() {
         </nav>
       </header>
 
-      <section className="relative z-10 px-4 sm:px-6 pt-12 sm:pt-20 pb-20 sm:pb-32">
+      <section className="relative z-10 px-4 sm:px-6 pt-12 sm:pt-20 pb-24 sm:pb-36">
         <div className="max-w-6xl mx-auto text-center">
           <div
             className={`transition-all duration-1000 delay-300 ${
@@ -110,18 +115,38 @@ export default function Landing() {
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-2">
-              <span className={TEXT_GRADIENT}>Split Bills</span>
+            <p className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.2em] text-purple-200/90 border border-purple-400/30 rounded-full px-4 py-2 mb-6">
+              <Zap className="w-4 h-4" />
+              Real-time Social Payments Infrastructure
+            </p>
+            <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-5 sm:mb-7 leading-tight px-2">
+              <span className={TEXT_GRADIENT}>Programmable social</span>
               <br />
               <span className="bg-gradient-to-r from-purple-300 to-fuchsia-400 bg-clip-text text-transparent">
-                with Crypto
+                payments on Hedera
               </span>
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-              Revolutionary bill splitting powered by Hedera HBAR. Upload
-              receipts, let AI handle the OCR, and split payments seamlessly
-              with your friends.
+            <p className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-8 sm:mb-10 max-w-4xl mx-auto leading-relaxed px-4">
+              SplitPay is a real-time, programmable social payments layer on
+              Hedera. We settle instantly via pooled liquidity, auto-net group
+              debts, and anchor proofs on-chain while final obligations close
+              asynchronously.
             </p>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 px-4">
+              {[
+                "Instant settlement",
+                "Low fixed fees",
+                "On-chain proofs",
+                "AI smart splits",
+              ].map((pill) => (
+                <span
+                  key={pill}
+                  className="text-xs sm:text-sm text-purple-100 bg-white/10 border border-white/15 rounded-full px-3 py-1.5"
+                >
+                  {pill}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div
@@ -134,7 +159,7 @@ export default function Landing() {
             <button
               onClick={handleLogin}
               disabled={isAuthLoading}
-              className={`group px-8 sm:px-12 py-4 sm:py-6 rounded-full font-bold text-lg sm:text-xl hover:shadow-sm hover:shadow-purple-400/30 ${BUTTON_BASE} ${BUTTON_GRADIENT} ${
+              className={`group px-8 sm:px-12 py-4 sm:py-5 rounded-full font-bold text-lg sm:text-xl hover:shadow-sm hover:shadow-purple-400/30 ${BUTTON_BASE} ${BUTTON_GRADIENT} ${
                 isAuthLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
@@ -148,7 +173,7 @@ export default function Landing() {
                   </>
                 ) : (
                   <>
-                    <span>Get Started</span>
+                    <span>Connect Wallet</span>
                     <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300" />
                   </>
                 )}
@@ -158,7 +183,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="relative z-10 px-4 sm:px-6 py-16 sm:py-20">
+      <section className="relative z-10 px-4 sm:px-6 py-18 sm:py-24">
         <div className="max-w-6xl mx-auto">
           <div
             className={`text-center mb-12 sm:mb-16 transition-all duration-1000 delay-700 ${
@@ -167,39 +192,55 @@ export default function Landing() {
                 : "opacity-0 translate-y-10"
             }`}
           >
+            <p className="text-purple-200 text-xs sm:text-sm uppercase tracking-[0.2em] mb-4">
+              Differentiation
+            </p>
             <h3 className="text-3xl sm:text-4xl font-bold mb-4 px-2">
-              <span className={TEXT_GRADIENT}>How It Works</span>
+              <span className={TEXT_GRADIENT}>What makes SplitPay different</span>
             </h3>
             <p className="text-slate-300 text-base sm:text-lg px-4">
-              Simple, secure, and seamless bill splitting in three steps
+              Built as programmable social payments rails, not a basic split app.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {[
               {
-                icon: Upload,
-                title: "Upload Receipt",
+                icon: Clock3,
+                title: "Instant Settlement",
                 description:
-                  "Snap a photo or upload your bill. Our AI OCR technology instantly reads and processes all items.",
+                  "Liquidity-backed settlement means users don't wait for others to pay before closing obligations.",
+                impact: "Immediate user experience, asynchronous debt resolution",
                 gradient: "from-purple-800/40 to-purple-700/40",
                 iconBg: "from-purple-600 to-purple-700",
                 borderColor: "border-purple-500/30",
               },
               {
-                icon: Users,
-                title: "Assign Items",
+                icon: Layers,
+                title: "Auto-Netting Engine",
                 description:
-                  "Choose who pays for what with our intuitive interface. Split items among multiple people effortlessly.",
+                  "Circular debts are automatically netted to reduce transaction count and settlement friction.",
+                impact: "Fewer transfers, lower cost, cleaner treasury flows",
                 gradient: "from-purple-800/40 to-purple-700/40",
                 iconBg: "from-purple-600 to-purple-700",
                 borderColor: "border-purple-500/30",
               },
               {
-                icon: Wallet,
-                title: "Pay with HBAR",
+                icon: BrainCircuit,
+                title: "Smart AI Splits",
                 description:
-                  "Secure payments using Hedera HBAR cryptocurrency through your connected HashPack wallet.",
+                  "AI proposes fair split logic and catches outlier allocations before settlement.",
+                impact: "Less manual work, better trust across groups",
+                gradient: "from-purple-800/40 to-purple-700/40",
+                iconBg: "from-purple-600 to-purple-700",
+                borderColor: "border-purple-500/30",
+              },
+              {
+                icon: ReceiptText,
+                title: "On-chain Expense Proofs",
+                description:
+                  "Expense records are hashed and anchored for tamper-proof auditability and dispute resolution.",
+                impact: "Verifiable payment history for consumers, teams, and DAOs",
                 gradient: "from-purple-800/40 to-purple-700/40",
                 iconBg: "from-purple-600 to-purple-700",
                 borderColor: "border-purple-500/30",
@@ -232,6 +273,9 @@ export default function Landing() {
                   <p className="text-slate-300 leading-relaxed text-center text-sm sm:text-base">
                     {feature.description}
                   </p>
+                  <p className="text-xs sm:text-sm text-purple-200/90 text-center mt-3 border-t border-white/10 pt-3">
+                    {feature.impact}
+                  </p>
                 </div>
               );
             })}
@@ -239,7 +283,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="relative z-10 px-4 sm:px-6 py-16 sm:py-20">
+      <section className="relative z-10 px-4 sm:px-6 py-18 sm:py-24">
         <div className="max-w-6xl mx-auto">
           <div
             className={`text-center mb-12 sm:mb-16 transition-all duration-1000 delay-1000 ${
@@ -248,41 +292,36 @@ export default function Landing() {
                 : "opacity-0 translate-y-10"
             }`}
           >
+            <p className="text-purple-200 text-xs sm:text-sm uppercase tracking-[0.2em] mb-4">
+              Use Cases
+            </p>
             <h3 className="text-3xl sm:text-4xl font-bold mb-4 px-2">
-              <span className={TEXT_GRADIENT}>Why Choose SplitPay?</span>
+              <span className={TEXT_GRADIENT}>Built for high-frequency group payments</span>
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
-                icon: Shield,
-                title: "Secure",
-                desc: "Blockchain-powered security",
+                icon: Plane,
+                title: "Trips",
+                desc: "Settle shared spend instantly while final balances net out automatically.",
                 gradient: "from-purple-700/30 to-purple-900/30",
                 iconColor: "text-purple-300",
                 borderColor: "border-purple-400/20",
               },
               {
-                icon: Zap,
-                title: "Fast",
-                desc: "Instant OCR processing",
+                icon: Home,
+                title: "Roommates",
+                desc: "Recurring rent/utilities with transparent proofs and automated split logic.",
                 gradient: "from-purple-700/30 to-purple-900/30",
                 iconColor: "text-purple-300",
                 borderColor: "border-purple-400/20",
               },
               {
-                icon: Globe,
-                title: "Decentralized",
-                desc: "Built on Hedera network",
-                gradient: "from-purple-700/30 to-purple-900/30",
-                iconColor: "text-purple-300",
-                borderColor: "border-purple-400/20",
-              },
-              {
-                icon: Sparkles,
-                title: "Smart",
-                desc: "AI-powered receipt reading",
+                icon: CalendarDays,
+                title: "Events",
+                desc: "Handle high-volume contribution flows with deterministic, auditable settlement.",
                 gradient: "from-purple-700/30 to-purple-900/30",
                 iconColor: "text-purple-300",
                 borderColor: "border-purple-400/20",
@@ -320,7 +359,55 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="relative z-10 px-4 sm:px-6 py-16 sm:py-20">
+      <section className="relative z-10 px-4 sm:px-6 py-18 sm:py-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <p className="text-purple-200 text-xs sm:text-sm uppercase tracking-[0.2em] mb-4">
+              Infrastructure
+            </p>
+            <h3 className="text-3xl sm:text-4xl font-bold mb-4 px-2">
+              <span className={TEXT_GRADIENT}>Why Hedera</span>
+            </h3>
+            <p className="text-slate-300 text-base sm:text-lg px-4">
+              Hedera gives SplitPay predictable costs and real-time finality needed
+              for social payment infrastructure.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+            {[
+              {
+                icon: Gauge,
+                title: "High throughput, low latency",
+                desc: "Designed for frequent micro-settlements and bursty social payment traffic.",
+              },
+              {
+                icon: Zap,
+                title: "Low and predictable fees",
+                desc: "Supports netting, batched settlement, and cost-efficient frequent updates.",
+              },
+              {
+                icon: Network,
+                title: "Reliable public ledger",
+                desc: "Tamper-resistant proofs and consistent execution for financial-grade trust.",
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="p-6 rounded-2xl bg-gradient-to-br from-purple-800/35 to-slate-900/45 border border-purple-500/30"
+                >
+                  <Icon className="w-8 h-8 text-purple-300 mb-4" />
+                  <h4 className="text-lg font-semibold text-white mb-2">{item.title}</h4>
+                  <p className="text-slate-300 text-sm sm:text-base">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative z-10 px-4 sm:px-6 py-18 sm:py-24">
         <div
           className={`max-w-4xl mx-auto text-center transition-all duration-1000 delay-1500 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -328,12 +415,13 @@ export default function Landing() {
         >
           <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-purple-800/30 to-purple-700/30 backdrop-blur-sm border border-purple-400/30 relative overflow-hidden">
             <div className="relative z-10">
-              <Receipt className="w-12 h-12 sm:w-16 sm:h-16 text-purple-300 mx-auto mb-4 sm:mb-6 animate-bounce" />
+              <BadgeCheck className="w-12 h-12 sm:w-16 sm:h-16 text-purple-300 mx-auto mb-4 sm:mb-6 animate-bounce" />
               <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-purple-200 to-purple-300 bg-clip-text text-transparent px-2">
-                Ready to Split Smart?
+                Build on the social payments layer
               </h3>
               <p className="text-slate-200 text-base sm:text-lg mb-6 sm:mb-8 px-4">
-                Join the future of bill splitting with cryptocurrency payments
+                SplitPay combines instant liquidity-backed settlement, programmable
+                splitting logic, and verifiable on-chain records for modern group finance.
               </p>
               <button
                 onClick={handleLogin}
@@ -350,7 +438,7 @@ export default function Landing() {
                     </>
                   ) : (
                     <>
-                      <span>Start Splitting Now</span>
+                      <span>Connect Wallet</span>
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-180 transition-transform duration-500" />
                     </>
                   )}
@@ -372,7 +460,7 @@ export default function Landing() {
               <img
                 className="w-6 h-6 sm:w-8 sm:h-8 text-fuchsia-400 animate-spin"
                 style={{ animationDuration: "3s" }}
-                src="https://rcxelnfhvbqszzccltry.supabase.co/storage/v1/object/sign/logo/SplitChain.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81MDYxNWEyMi0yMDRlLTQzYzMtYjgwNy1lYTllZGI1YjgzMTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL1NwbGl0Q2hhaW4ucG5nIiwiaWF0IjoxNzU0MzczNzA1LCJleHAiOjE4MTc0NDU3MDV9.3w7qGG5bAaOJS4b6aTUc_gR3HutrmWRoXIVIDrgoys0"
+                src="/splitpay.png"
                 alt=""
               />
               <div className="absolute inset-0 bg-fuchsia-400 blur-md opacity-50 animate-pulse"></div>

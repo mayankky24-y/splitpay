@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/JZ23-2/splitbill-backend/services"
 	"github.com/JZ23-2/splitbill-backend/utils"
@@ -36,6 +37,10 @@ func ExtractReceipt(c *gin.Context) {
 
 	result, err := services.SendToGemini(opened)
 	if err != nil {
+		if strings.Contains(err.Error(), "status 503") || strings.Contains(err.Error(), "status 429") {
+			utils.FailedResponse(c, http.StatusServiceUnavailable, "AI service is currently busy. Please try again in a few seconds.")
+			return
+		}
 		utils.FailedResponse(c, http.StatusInternalServerError, "failed to process image:"+err.Error())
 		return
 	}
