@@ -17,7 +17,7 @@ const appMetadata = {
   icons: [
     "/splitpay.png",
   ],
-  url: "http://localhost:5173/",
+  url: "https://usesplitpay.xyz/",
 };
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
