@@ -46,7 +46,12 @@ func SendToGemini(file io.Reader) (*dtos.ReceiptResponse, error) {
 
 	body, _ := json.Marshal(payload)
 
-	apiURL := os.Getenv("GEMINI_API_URL") + "?key=" + os.Getenv("GEMINI_API_KEY")
+	geminiBaseURL := strings.TrimSpace(os.Getenv("GEMINI_API_URL"))
+	geminiAPIKey := strings.TrimSpace(os.Getenv("GEMINI_API_KEY"))
+	if geminiBaseURL == "" || geminiAPIKey == "" {
+		return nil, fmt.Errorf("missing GEMINI_API_URL or GEMINI_API_KEY")
+	}
+	apiURL := geminiBaseURL + "?key=" + geminiAPIKey
 
 	res, err := postGeminiWithRetry(apiURL, body)
 	if err != nil {

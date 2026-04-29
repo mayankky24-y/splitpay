@@ -15,7 +15,10 @@ func Loadenv() {
 		log.Printf("No local .env loaded, relying on runtime environment: %v", err)
 	}
 
-	requiredEnv := []string{"DB_USER", "DB_PASS", "DB_HOST", "DB_PORT", "DB_NAME"}
+	requiredEnv := []string{
+		"DB_USER", "DB_PASS", "DB_HOST", "DB_PORT", "DB_NAME",
+		"GEMINI_API_KEY", "GEMINI_API_URL",
+	}
 	missing := make([]string, 0)
 
 	for _, key := range requiredEnv {

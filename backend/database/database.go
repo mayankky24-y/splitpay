@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/JZ23-2/splitbill-backend/models"
 	"gorm.io/driver/mysql"
@@ -13,12 +14,18 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
+	dbUser := strings.TrimSpace(os.Getenv("DB_USER"))
+	dbPass := strings.TrimSpace(os.Getenv("DB_PASS"))
+	dbHost := strings.TrimSpace(os.Getenv("DB_HOST"))
+	dbPort := strings.TrimSpace(os.Getenv("DB_PORT"))
+	dbName := strings.TrimSpace(os.Getenv("DB_NAME"))
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASS"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"),
+		dbUser,
+		dbPass,
+		dbHost,
+		dbPort,
+		dbName,
 	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
